@@ -1,31 +1,30 @@
-import random.random as random
-
 class Node(object):
 
-    def __init__(self):
-        self.name = None
-        self.counts = None
+    def __init__(self,name=None,count=None,level=None):
+        self.name = name
+        self.count = count
+        self.level = level
         self._parent = None
         self._child = None
 
     def __str__(self):
-        return '{}:{}'.format(self.name,self.counts)
+        return 'Node({}:{}:{})'.format(self.name,self.count,self.level)
 
     @property
     def child(self):
         ''' Defines the child attribute of a node. This should be a list of
-        Node objects.'''
+        Node objects. '''
         return self._child
 
     @property
     def parent(self):
         ''' Defines the parent attribute of a node. This should be a Node
-        object.'''
+        object. '''
         return self._parent
 
     @child.setter
     def child(self,value):
-        ''' Defines the set attribute function to set a child.'''
+        ''' Defines the set attribute function to set a child. '''
         try:
             assert all([isinstance(x, Node) for x in value])
         except AssertionError:
@@ -35,7 +34,7 @@ class Node(object):
 
     @parent.setter
     def parent(self,value):
-        ''' Defines the set attribute function to set a parent.'''
+        ''' Defines the set attribute function to set a parent. '''
         try:
             assert isinstance(value, Node)
         except AssertionError:
@@ -44,7 +43,7 @@ class Node(object):
 
     def add_child(self,value):
         ''' This function adds a child to the list of children for this Node. It
-        will create a list if one doesn't exist.'''
+        will create a list if one doesn't exist. '''
         try:
             assert isinstance(value,Node)
         except AssertionError:
@@ -54,6 +53,7 @@ class Node(object):
         else:
             self.child.append(value)
 
+        return value
 
 class Tree(object):
 
@@ -62,16 +62,15 @@ class Tree(object):
         self._root = None
         self.name = name
 
-
     @property
     def root(self):
         ''' Defines the root of the tree. This should be a Node onject with the
-        parent set as None.'''
+        parent set as None. '''
         return self._root
 
     @root.setter
     def root(self,value):
-        ''' Defines the set attribute function to set a root for the tree.'''
+        ''' Defines the set attribute function to set a root for the tree. '''
         try:
             assert isinstance(value, Node)
             assert (value.parent == None)
@@ -79,3 +78,56 @@ class Tree(object):
             raise TypeError('The root of the tree has to be a Node object with \
             the parent set to None.')
         self._root = value
+
+    def find_node_by_level(self,inp_level):
+        ''' Returns a node given a level. Returns None if a node isn't found.'''
+
+        depth = 1
+        max_depth = len(inp_level)
+        starting_node = self._root
+
+        while depth < max_depth:
+            next_node = None
+            if starting_node.child == None:
+                pass
+            else:
+                for n in starting_node.child:
+                    if n.level == inp_level[0:depth+1]:
+                        next_node = n
+                        depth += 1
+                        starting_node = next_node
+            if next_node == None:
+                break
+
+        return next_node
+
+    def add_node(self,node,inp_level):
+        ''' Adds a node at the specified level. This fucntion will attempt to
+        create the parent nodes if they don't exist. Parents will be just blank
+        nodes. '''
+
+        try:
+            assert isinstance(node, Node)
+        except AssertionError:
+            raise TypeError('Input node has to be a Node object')
+
+        depth = 1
+        max_depth = len(inp_level)
+        starting_node = self._root
+
+        while depth < (max_depth-1):
+            current_level = inp_level[0:depth+1]
+            current_node = self.find_node_by_level(current_level)
+            if isinstance(current_node, Node):
+                # If node exists, do nothing
+                starting_node = current_node
+                depth+=1
+            else:
+                # If node doesn't exist, add it
+                starting_node = starting_node.add_child(Node(level=
+                                                                current_level))
+                depth+=1
+        # When the required depth is reached, add the node provided as Input
+        starting_node.add_child(node)
+
+        return node
