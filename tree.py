@@ -131,3 +131,22 @@ class Tree(object):
         starting_node.add_child(node)
 
         return node
+
+    def _rec_search(self,curr_depth,final_depth,node):
+        ''' This function returns a list of nodes at a given depth from the node
+        provided as the input. '''
+
+        if curr_depth == final_depth:
+            return [node]
+        else:
+            ans = []
+            for new_node in node.child:
+                ans += self._rec_search(curr_depth+1,final_depth,new_node)
+            return ans
+
+    def get_nodes_by_depth(self,depth,attr):
+        ''' This function returns a list of node attributes at a given depth
+        starting from the root. '''
+
+        nodes = []
+        pass
