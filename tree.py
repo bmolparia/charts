@@ -144,9 +144,8 @@ class Tree(object):
                 ans += self._rec_search(curr_depth+1,final_depth,new_node)
             return ans
 
-    def get_nodes_by_depth(self,depth,attr):
+    def get_nodes_by_depth(self,depth):
         ''' This function returns a list of node attributes at a given depth
         starting from the root. '''
 
-        nodes = []
-        pass
+        return self._rec_search(0,depth,self.root)

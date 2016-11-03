@@ -81,3 +81,11 @@ def parse_header(line):
             samples[i]  = line.index(i)
 
     return rankInd,nameInd,totalInd,samples
+
+
+if __name__ == "__main__":
+
+    fpath = './tests/test.tsv'
+    d =  main(fpath)
+    for i in d:
+        print(i,'\t',d[i],d[i].root, d[i].find_node_by_level(['0','2','7','4','1','18','2']))
