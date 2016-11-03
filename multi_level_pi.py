@@ -37,7 +37,7 @@ def plot(data,outname,depth=1,maxdepth=3):
 	sampleNames = list(data)
 
 	plotind = 1
-	for name in sampleNames[0:1]:
+	for name in sampleNames:
 
 		sample = data[name]
 
@@ -49,18 +49,14 @@ def plot(data,outname,depth=1,maxdepth=3):
 
 		plt.suptitle(name,fontsize=40,x=(15.0/23.0)/2)
 		colormaps = {1:'winter',2:'spectral_r',3:'Set1'}
-		lgds = []
 
 		#Get the nodes at "depth" starting from the root
 		current_nodes = sample.get_nodes_by_depth(depth)
-		print(current_nodes)
 
 		while depth <= maxdepth:
 
 			counts = [x.count for x in current_nodes]
 			labels = [x.name for x in current_nodes]
-
-			print(counts,labels)
 
 			cMap      = plt.get_cmap(colormaps[depth])
 			cNorm     = colors.Normalize(vmin=0, vmax=len(counts))
@@ -91,13 +87,10 @@ def plot(data,outname,depth=1,maxdepth=3):
 			current_nodes = get_next_level_of_nodes(current_nodes)
 
 		plotind += 1
-		#plt.show()
-
 		pdfOut.savefig(fig)
 		plt.close()
 
 	pdfOut.close()
-
 
 if __name__ == "__main__":
 
