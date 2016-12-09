@@ -10,7 +10,7 @@ def plot(data,outname,sample_names,sample_dict,depth=3,**_):
 	# Collect the data
 	data_by_taxon = {}
 	taxon_name_map = {}
-	for sample_name in sorted(sample_names):
+	for sample_name in sample_names:
 		sample_id = sample_dict[sample_name]
 
 		sample = data[sample_id]
