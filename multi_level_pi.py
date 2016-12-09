@@ -1,9 +1,5 @@
 '''
-NOTE - This script creates a multi level pi chart for a tree dataset. If you
-run this directly, it takes in an input file in the format produced by the
-software "mothur". The default chart plotted begins at the first level from
-the root and ends after 3 levels. This can be changed using the optional
-parameters depth and maxdepth.
+This script creates a multi level pi chart for a tree dataset.
 '''
 
 import math
@@ -14,8 +10,6 @@ from matplotlib.backends.backend_pdf import PdfPages
 import matplotlib.pyplot as plt
 import matplotlib.cm as cmx
 import matplotlib.colors as colors
-
-import input_parser
 
 def get_next_level_of_nodes(nodes):
 	new_nodes = []
@@ -35,7 +29,6 @@ def plot(data,outname,depth_start=1,maxdepth=3):
 	pdfOut = PdfPages(outname)
 	num_samples = len(data)
 	sampleNames = list(data)
-
 
 	for name in sampleNames:
 
@@ -91,20 +84,3 @@ def plot(data,outname,depth_start=1,maxdepth=3):
 		plt.close()
 
 	pdfOut.close()
-
-if __name__ == "__main__":
-
-	parser = argparse.ArgumentParser(description='Processes file paths and \
-	plotting parameters')
-	parser.add_argument('inp', metavar='Input',
-						help='path to the input file')
-	parser.add_argument('out', metavar='Output',
-						help='path for the output image')
-	parser.add_argument('-d', metavar="Depth", dest = 'depth_s', default=1,
-						help='The level/depth to begin plotting from')
-	parser.add_argument('-m', metavar="MaxDepth", dest = 'maxdepth', default=3,
-					help='The level/depth at which the plot ends')
-
-	args = parser.parse_args()
-	data = input_parser.main(args.inp)
-	plot(data,args.out,args.depth_s,args.maxdepth)
