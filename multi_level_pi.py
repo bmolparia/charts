@@ -27,10 +27,9 @@ def plot(data,outname,depth=1,maxdepth=3,**_):
 	for the chart. '''
 
 	pdfOut = PdfPages(outname)
-	num_samples = len(data)
-	sampleNames = list(data)
+	sample_names = list(data)
 
-	for name in sampleNames:
+	for name in sample_names:
 
 		sample = data[name]
 
@@ -41,14 +40,14 @@ def plot(data,outname,depth=1,maxdepth=3,**_):
 		total = root.count
 
 		plt.suptitle(name,fontsize=40,x=(15.0/23.0)/2)
-		colormaps = {1:'winter',2:'spectral_r',3:'Set1'}
+		colormaps = {1:'winter',2:'spectral_r',3:'Set1',4:'Set2'}
 
 		#Get the nodes at "depth" starting from the root
 		current_depth = depth
 		current_nodes = sample.get_nodes_by_depth(current_depth)
 
 		while current_depth <= maxdepth:
-			
+
 			counts = [x.count for x in current_nodes]
 			labels = [x.name for x in current_nodes]
 
@@ -71,9 +70,8 @@ def plot(data,outname,depth=1,maxdepth=3,**_):
 						  wedgeprops={'alpha':0.8})
 			Pie, text = ax.pie(countsArr, radius = radi, **kwargs)
 
-			legend_entry = fig.legend(Pie,labels ,
-			bbox_to_anchor=((15.0/23.0)+((current_depth-1)*0.15), 1),
-							loc='upper right')
+			legend_entry = fig.legend(Pie, labels, loc='upper right',
+			bbox_to_anchor=((15.0/23.0)+((current_depth-1)*0.15), 1) )
 
 			ax.add_artist(legend_entry)
 			plt.setp(Pie,width=width)
