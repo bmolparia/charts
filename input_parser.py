@@ -39,7 +39,7 @@ def main(fpath):
         dataline = fhand.readline()
 
     fhand.close()
-    return Data,samples
+    return Data,list(samples)
 
 def hierarchy(rank):
 

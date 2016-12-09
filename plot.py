@@ -48,7 +48,7 @@ if __name__ == "__main__":
     data,sample_ids = input_parser.main(args.inp)
     if args.ssheet == None:
         sample_names = sample_ids
-        sample_dict = {key:value for key in sample_ids for value in sample_ids}
+        sample_dict = {key:key for key in sample_ids}
     else:
         sample_names, sample_dict = parse_sample_sheet(args.ssheet)
 
