@@ -39,7 +39,7 @@ def main(fpath):
         dataline = fhand.readline()
 
     fhand.close()
-    return Data
+    return Data,samples
 
 def hierarchy(rank):
 
@@ -81,4 +81,3 @@ def parse_header(line):
             samples[i]  = line.index(i)
 
     return rankInd,nameInd,totalInd,samples
-
