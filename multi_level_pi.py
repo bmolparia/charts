@@ -1,9 +1,9 @@
 '''
 NOTE - This script creates a multi level pi chart for a tree dataset. If you
 run this directly, it takes in an input file in the format produced by the
-software "mothur". The default chart is plotted begins at the first level from
-the root and ends after 3 levels. This can be changed using the option parameters
-depth and maxdepth.
+software "mothur". The default chart plotted begins at the first level from
+the root and ends after 3 levels. This can be changed using the optional
+parameters depth and maxdepth.
 '''
 
 import math
@@ -26,7 +26,7 @@ def get_next_level_of_nodes(nodes):
 			pass
 	return new_nodes
 
-def plot(data,outname,depth=1,maxdepth=3):
+def plot(data,outname,depth_start=1,maxdepth=3):
 	''' This function will plot a multi level pi chart for the given "data" in a
 	tree format. "depth" is the starting level for the pi chart, "maxdepth" is
 	the level at which the outermost layer is plotted. "outname" is the filepath
@@ -36,7 +36,7 @@ def plot(data,outname,depth=1,maxdepth=3):
 	num_samples = len(data)
 	sampleNames = list(data)
 
-	plotind = 1
+
 	for name in sampleNames:
 
 		sample = data[name]
@@ -51,6 +51,7 @@ def plot(data,outname,depth=1,maxdepth=3):
 		colormaps = {1:'winter',2:'spectral_r',3:'Set1'}
 
 		#Get the nodes at "depth" starting from the root
+		depth = depth_start
 		current_nodes = sample.get_nodes_by_depth(depth)
 
 		while depth <= maxdepth:
@@ -86,7 +87,6 @@ def plot(data,outname,depth=1,maxdepth=3):
 			depth += 1
 			current_nodes = get_next_level_of_nodes(current_nodes)
 
-		plotind += 1
 		pdfOut.savefig(fig)
 		plt.close()
 
@@ -100,11 +100,11 @@ if __name__ == "__main__":
 						help='path to the input file')
 	parser.add_argument('out', metavar='Output',
 						help='path for the output image')
-	parser.add_argument('-d', metavar="Depth", dest = 'depth', default=1,
+	parser.add_argument('-d', metavar="Depth", dest = 'depth_s', default=1,
 						help='The level/depth to begin plotting from')
 	parser.add_argument('-m', metavar="MaxDepth", dest = 'maxdepth', default=3,
 					help='The level/depth at which the plot ends')
 
 	args = parser.parse_args()
 	data = input_parser.main(args.inp)
-	plot(data,args.out,args.depth,args.maxdepth)
+	plot(data,args.out,args.depth_s,args.maxdepth)
