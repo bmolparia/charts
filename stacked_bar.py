@@ -74,8 +74,8 @@ def plot(data,outname,sample_names,sample_dict,depth=3,**_):
 	plt.xticks(ind, sample_names, fontsize=25,rotation=60, **font)
 	plt.yticks(np.arange(0,101,10),fontsize=25, **font)
 	legend_names = list(map(lambda x: taxon_name_map[x], taxon_list))
-	plt.legend(all_bars, legend_names, bbox_to_anchor=(1.01, 1), loc=0,
+	lgd = plt.legend(all_bars, legend_names, bbox_to_anchor=(1.01, 1), loc=0,
 			fontsize=30)
 	fig.tight_layout(rect=(0,0,0.85,1))
 
-	plt.savefig(outname,format='png')
+	plt.savefig(outname,format='png',bbox_extra_artists=(lgd,),bbox_inches='tight')
