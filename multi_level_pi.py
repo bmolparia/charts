@@ -40,7 +40,7 @@ def plot(data,outname,sample_names,sample_dict,depth=1,maxdepth=3,**_):
 		ax  = fig.add_axes([0,0,(15.0/figure_width),1],frameon=True)
 
 		root  = sample.root
-		total = root.count
+		total = float(root.count)
 
 		plt.suptitle(sample_name,fontsize=40,x=(15.0/figure_width)/2)
 		colormaps = {1:'spectral_r',2:'Dark2',3:'Set1',4:'Paired'}
@@ -60,20 +60,20 @@ def plot(data,outname,sample_names,sample_dict,depth=1,maxdepth=3,**_):
 			color_norm = colors.Normalize(vmin=0, vmax=len(counts))
 			scalar_map = cmx.ScalarMappable(norm=color_norm, cmap=color_map)
 
-			colorVals = []
+			color_values = []
 			i = 0
 			while i < len(counts):
-				colorVals += [scalar_map.to_rgba(i)]
+				color_values += [scalar_map.to_rgba(i)]
 				i += 1
 
-			countsArr = np.array(counts)/total
+			counts_array = np.array(counts)/total
 			# Width of the "rings" (percentages if the largest "radius"==1)
 			width = 0.2
 			radi  = 1 - ((maxdepth-current_depth)*0.3)
 
-			kwargs = dict(startangle=90, colors=colorVals,
+			kwargs = dict(startangle=90, colors=color_values,
 						  wedgeprops={'alpha':0.8})
-			Pie, text = ax.pie(countsArr, radius = radi, **kwargs)
+			Pie, text = ax.pie(counts_array, radius = radi, **kwargs)
 
 			xwidth = (1.0/num_levels)*(1-(15.0/figure_width))
 			xbeg = (15.0/figure_width)+((legend_number-1) * xwidth)
