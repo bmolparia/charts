@@ -3,7 +3,6 @@ This script creates a multi level pi chart for a tree dataset.
 '''
 
 import math
-import argparse
 
 import numpy as np
 from matplotlib.backends.backend_pdf import PdfPages
@@ -34,7 +33,7 @@ def plot(data,outname,sample_names,sample_dict,depth=1,maxdepth=3,**_):
 		sample = data[sample_id]
 
 		num_levels = (maxdepth - depth + 1)
-		figure_width = 15+(4*num_levels)
+		figure_width = 15+(3.5*num_levels)
 
 		fig = plt.figure(figsize=(figure_width,15))
 		ax  = fig.add_axes([0,0,(15.0/figure_width),1],frameon=True)
@@ -43,7 +42,7 @@ def plot(data,outname,sample_names,sample_dict,depth=1,maxdepth=3,**_):
 		total = float(root.count)
 
 		plt.suptitle(sample_name,fontsize=40,x=(15.0/figure_width)/2)
-		colormaps = {1:'spectral_r',2:'Dark2',3:'Set1',4:'Paired'}
+		colormaps = {1:'hsv',2:'Paired',3:'Set1',4:'Dark2',5:'Set2'}
 
 		#Get the nodes at "depth" starting from the root
 		current_depth = depth
@@ -56,7 +55,7 @@ def plot(data,outname,sample_names,sample_dict,depth=1,maxdepth=3,**_):
 			counts = [x.count for x in current_nodes]
 			labels = [x.name for x in current_nodes]
 
-			color_map  = plt.get_cmap(colormaps[legend_number])
+			color_map  = plt.get_cmap(colormaps[legend_number%5])
 			color_norm = colors.Normalize(vmin=0, vmax=len(counts))
 			scalar_map = cmx.ScalarMappable(norm=color_norm, cmap=color_map)
 
@@ -68,12 +67,25 @@ def plot(data,outname,sample_names,sample_dict,depth=1,maxdepth=3,**_):
 
 			counts_array = np.array(counts)/total
 			# Width of the "rings" (percentages if the largest "radius"==1)
-			width = 0.2
-			radi  = 1 - ((maxdepth-current_depth)*0.3)
+			width = 0.75/num_levels
+			radi  = 1 - ((maxdepth-current_depth)* (1.0/num_levels))
 
 			kwargs = dict(startangle=90, colors=color_values,
-						  wedgeprops={'alpha':0.8})
-			Pie, text = ax.pie(counts_array, radius = radi, **kwargs)
+						  wedgeprops={'alpha':1} )
+			Pie, text = ax.pie(counts_array, radius=radi, **kwargs)
+			plt.setp(Pie,width=width)
+
+			# Add labels to the Wedge objects and sort wedges by angle for
+			# legend entries
+			Pie_copy = []
+			for i in Pie:
+				if (i.theta2-i.theta1)>0:
+					index = Pie.index(i)
+					i.label = labels[index]
+					Pie_copy.append(i)
+
+			Pie_copy = sorted(Pie_copy, key=lambda x:(x.theta2-x.theta1),
+							  reverse=True)
 
 			xwidth = (1.0/num_levels)*(1-(15.0/figure_width))
 			xbeg = (15.0/figure_width)+((legend_number-1) * xwidth)
@@ -83,18 +95,17 @@ def plot(data,outname,sample_names,sample_dict,depth=1,maxdepth=3,**_):
 			ax_legend.xaxis.set_visible(False)
 			ax_legend.yaxis.set_visible(False)
 
-			legend_entry = ax_legend.legend(Pie, labels, loc='upper left')
-			#bbox_to_anchor=(0,1) )
+			sorted_labels = map(lambda x: x.label, Pie_copy)
+			legend_entry = ax_legend.legend(Pie_copy, sorted_labels,
+												loc='upper left')
 
 			legends.append(legend_entry)
 			legend_number += 1
 
-			plt.setp(Pie,width=width)
-
 			current_depth += 1
 			current_nodes = get_next_level_of_nodes(current_nodes)
 
-		pdf_out.savefig(fig)
+		pdf_out.savefig(fig,bbox_inches='tight')
 		plt.close()
 
 	pdf_out.close()
