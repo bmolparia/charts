@@ -11,8 +11,8 @@ pip3 install -r requirements.txt
 
 This script can be used to plot tree data in different styles. It takes an
 input file in the format produced by the software "mothur". The default chart
-plotted will be at level 3. Multiple level charts will start at root and end
-after 3 as default behavior. This can be changed using the optional
+plotted will be at taxonomy level 3. Multiple level charts will start at root 
+and end after 3 as default behavior. This can be changed using the optional
 parameters.
 
 ### Positional Arguments:
